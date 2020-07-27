@@ -1,0 +1,38 @@
+What is tensor?
+
+tensor : an n-dimensional array or list used in Tensor to represent all data
+
+	Defined by three properties : Rank, Shape, and Type
+
+Rank : Dimensionality of a Tensor
+	- if rank is 0 : single value, a scalar (example : s=123)
+	- if rank is 1 : list of values, a vector (example : v=[1,2,3,4])
+	- if rank is 2 : matrix (example : m=[[1,2,3],[4,5,6]])
+	- if rank is 3 : 3-Tensor (...)
+	- and so on...
+
+Shape : Shape of data in Tensor. Related to Rank
+	- s = 145 (scalar) : []
+	- v = [1,2,3,4,5] (vector) : [5]
+	- m = [[1,2,3],[4,5,6]] (matrix) : [2,3]
+	- and so on...
+
+Data Types
+	- float32, float64
+	- int8, int16, int32, int64
+	- uint8, uint16
+	- string
+	- bool
+	- complex64, complex128
+	- qint8, qint16, quint8 (quantitized integers)
+
+What are quantitized values?
+	- scaled to reduce size
+	- can be processed faster
+
+Methods
+	- get_shape() : returns shape
+	- reshape() : changes shape
+	- rank : returns rank
+	- dtype : returns data type
+	- cast : change data type
