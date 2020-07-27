@@ -75,9 +75,46 @@ optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(tf_cost)
 init = tf.global_variables_initializer()
 
 # Launch graph in session
-with tf.Session() as sess:
+with tf.compat.v1.Session() as sess:
     sess.run(init)
     
     # display training progress settings
     display_every = 2
     num_training_iter = 50
+    
+    # iterate training data
+    for i in range(num_training_iter):
+        
+        # Fit all training data
+        for (x, y) in zip(train_house_size_norm, train_price_norm):
+            sess.run(optimizer, feed_dict={tf_house_size:x, tf_price:y})
+        
+        # display current status
+        if(i + 1) % display_every == 0:
+            c = sess.run(tf_cost, feed_dict={tf_house_size: train_house_size_norm, tf_price:train_price_norm})
+            print("iteration #:", '%04d' % (i+1), "cost=", "{:.9f}".format(c), \
+                  "size_factor=", sess.run(tf_size_factor), "price_offset=", sess.run(tf_price_offset))
+    
+    print("Optimization finished!!")
+    training_cost = sess.run(tf_cost, feed_dict={tf_house_size:train_house_size_norm, tf_price: train_price_norm})
+    print("Trained cost=", training_cost, "size_factor=", sess.run(tf_size_factor), "price_offset=", sess.run(tf_price_offset), '\n')
+    
+    # plotting
+    train_house_size_mean = train_house_size.mean()
+    train_house_size_std = train_house_size.std()
+    
+    train_price_mean = train_price.mean()
+    train_price_std = train_price.std()
+    
+    plt.rcParams["figure.figsize"] = (10,8)
+    plt.figure()
+    plt.ylabel("Price")
+    plt.xlabel("Size")
+    plt.plot(train_house_size, train_price, 'go', label='Training data')
+    plt.plot(test_house_size, test_price, 'mo', label='Testing data')
+    plt.plot(train_house_size_norm * train_house_size_std + train_house_size_mean,
+             (sess.run(tf_size_factor) * train_house_size_norm + sess.run(tf_price_offset)) * train_price_std + train_price_mean,
+             label="Learned Regression")
+    
+    plt.legend(loc='upper left')
+    plt.show()
